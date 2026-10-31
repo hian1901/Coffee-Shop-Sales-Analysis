@@ -1,7 +1,6 @@
 # ☕ Coffee Shop Sales Analytics & Customer Behavior Dashboard
 
-![Dashboard Overview](assets/dashboard_overview.png)
-*(Executive Summary Dashboard built with Power BI Desktop & MySQL)*
+<img width="1310" height="791" alt="Screenshot 2026-10-31 180253" src="https://github.com/user-attachments/assets/99a0b233-a15d-4505-b7c2-4f54f74f1634" />
 
 ---
 
