@@ -1,0 +1,130 @@
+table 'real_pj_coffee_shop_db sales_db_copy'
+	lineageTag: f570d313-7b50-4986-bf2a-e147ff5f8b58
+
+	column transaction_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e7637237-cfac-4d44-a1a1-d3ca4488e51f
+		summarizeBy: sum
+		sourceColumn: transaction_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column transaction_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: dc5ab39e-3943-48ba-b115-c08ab70df988
+		summarizeBy: none
+		sourceColumn: transaction_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column transaction_time
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 64c4ff0d-071e-46ee-b4bf-fe69247a70d8
+		summarizeBy: none
+		sourceColumn: transaction_time
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column transaction_qty
+		dataType: int64
+		formatString: 0
+		lineageTag: ceeef347-1dac-4905-9905-7923f6a017d4
+		summarizeBy: sum
+		sourceColumn: transaction_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_id
+		dataType: int64
+		formatString: 0
+		lineageTag: d9c22b4c-bd67-4a1c-a97b-27055fe7525b
+		summarizeBy: sum
+		sourceColumn: store_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_location
+		dataType: string
+		lineageTag: b5394c38-88d3-406d-950b-37b24aae456e
+		summarizeBy: none
+		sourceColumn: store_location
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: int64
+		formatString: 0
+		lineageTag: da831203-a5e2-4f83-8540-cfabd2e6c272
+		summarizeBy: sum
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_price
+		dataType: double
+		lineageTag: 47800a1d-8bc6-4c91-a5bf-c55cd1acd83d
+		summarizeBy: sum
+		sourceColumn: unit_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column product_category
+		dataType: string
+		lineageTag: e5c3bf00-5948-48b5-8b28-8bd8b9c07d2a
+		summarizeBy: none
+		sourceColumn: product_category
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_type
+		dataType: string
+		lineageTag: 70c88be3-3277-4104-858f-d3b73422eaea
+		summarizeBy: none
+		sourceColumn: product_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_detail
+		dataType: string
+		lineageTag: 51e471bd-936c-46f4-9a8a-a7306bdcfb00
+		summarizeBy: none
+		sourceColumn: product_detail
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue
+		dataType: double
+		formatString: #,0.00
+		lineageTag: de74cd03-519c-47a0-8b07-9d28edf63a63
+		summarizeBy: sum
+		sourceColumn: revenue
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hour = HOUR('real_pj_coffee_shop_db sales_db_copy'[transaction_time])
+		formatString: 0
+		lineageTag: 0ce0c88f-7d95-4459-b268-7587d8d302de
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'real_pj_coffee_shop_db sales_db_copy' = m
+		mode: import
+		source =
+				let
+				  Source = MySQL.Database("127.0.0.1", "real_pj_coffee_shop_db"),
+				  #"Navigation 1" = Source{[Schema = "real_pj_coffee_shop_db", Item = "sales_db_copy"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

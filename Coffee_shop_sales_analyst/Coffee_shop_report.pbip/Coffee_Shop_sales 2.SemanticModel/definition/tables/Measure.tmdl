@@ -1,0 +1,138 @@
+table Measure
+	lineageTag: 12fc3ced-70a1-427d-b89b-5b132c913bd6
+
+	measure CM_sales =
+			VAR selected_month = SELECTEDVALUE(Date_table[Month])
+			return
+			TotalMTD(calculate(sum('real_pj_coffee_shop_db sales_db_copy'[revenue]), Date_table[Month] = selected_month), Date_table[Date])
+		lineageTag: 09dc7fdf-2dc9-4f12-81fe-a09690cc6d65
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure PM_sales = CALCULATE([CM_sales],DATEADD(Date_table[Date],-1,MONTH))
+		lineageTag: 26af33e2-3c63-4bc4-b538-ecadacb2e8da
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MoM & sales_diff' = ```
+			
+			VAR month_diff = [CM_sales] - [PM_sales]
+			VAR MoM =( [CM_sales] - [PM_sales] ) / [PM_sales]
+			VAR _sign = IF(month_diff > 0,"+","")
+			VAR _signtrend = IF(month_diff > 0,"▲","▼") 
+			RETURN
+			_signtrend & "" & _sign & format(MoM,"#0.0%") & "|" & _sign  &FORMAT(month_diff/1000,"#0.0K") & "" & " vs LM"
+			```
+		lineageTag: 69ec4c78-90d6-47e4-8d13-120ca44c0140
+
+	measure total_orders = DISTINCTCOUNT('real_pj_coffee_shop_db sales_db_copy'[transaction_id])
+		formatString: 0
+		lineageTag: ffd11847-ca28-48f9-bcf7-d9b48fa2683f
+
+	measure CM_Orders =
+			VAR selected_month = SELECTEDVALUE(Date_table[Month])
+			return
+			TotalMTD(calculate(DISTINCTCOUNT('real_pj_coffee_shop_db sales_db_copy'[transaction_id]), Date_table[Month] = selected_month), Date_table[Date])
+		formatString: 0
+		lineageTag: d0338337-1667-42fd-937f-dae6b84c155c
+
+	measure PM_orders = CALCULATE([CM_Orders],DATEADD(Date_table[Date],-1,MONTH))
+		formatString: 0
+		lineageTag: 216ca58a-8ca5-49ba-a117-417bac86b45b
+
+	measure 'MoM & order_diff' = ```
+			
+			VAR month_diff = [CM_Orders] - [PM_orders]
+			VAR MoM =( [CM_Orders] - [PM_orders] ) / [PM_orders]
+			VAR _sign = IF(month_diff > 0,"+","")
+			VAR _signtrend = IF(month_diff > 0,"▲","▼") 
+			RETURN
+			_signtrend & "" & _sign & format(MoM,"#0.0%") & "|" & _sign  & month_diff & "" & " vs LM"
+			```
+		lineageTag: fbbd743b-b1e6-40b1-8255-eee534cf7fc3
+
+	measure CM_Qty = ```
+			VAR selected_month = SELECTEDVALUE(Date_table[Month])
+			return
+			TotalMTD(calculate(SUM('real_pj_coffee_shop_db sales_db_copy'[transaction_qty]), Date_table[Month] = selected_month), Date_table[Date]) 
+			```
+		formatString: 0
+		lineageTag: 6b9fe477-6799-4458-a1f9-548caa18da6e
+
+	measure PM_Qty = CALCULATE([CM_Qty],DATEADD(Date_table[Date],-1,MONTH))
+		formatString: 0
+		lineageTag: 8eacedd9-5c33-43ae-b50b-261c387640b9
+
+	measure 'MoM & QTy_diff' = ```
+			
+			VAR month_diff = [CM_Qty] - [PM_Qty]
+			VAR MoM =( [CM_Qty] - [PM_Qty] ) / [PM_Qty]
+			VAR _sign = IF(month_diff > 0,"+","")
+			VAR _signtrend = IF(month_diff > 0,"▲","▼") 
+			RETURN
+			_signtrend & "" & _sign & format(MoM,"#0.0%") & "|" & _sign  & month_diff & "" & " vs LM"
+			```
+		lineageTag: 57dad860-befc-47f3-9105-f971fc418990
+
+	measure total_Qty = SUM('real_pj_coffee_shop_db sales_db_copy'[transaction_qty])
+		formatString: 0
+		lineageTag: 4f1eaed0-160f-46ed-9522-016a561f9002
+
+	measure 'Total sale' = SUM('real_pj_coffee_shop_db sales_db_copy'[revenue])
+		lineageTag: 713311f9-afd4-4653-aba6-ac316910e5d1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure PlaceHolder = 0
+		formatString: 0
+		lineageTag: ff97d3bd-0416-4f8a-9ee8-04c55f447dfb
+
+	measure 'label for store location' = SELECTEDVALUE('real_pj_coffee_shop_db sales_db_copy'[store_location]) & " | " & [Total sale]
+		lineageTag: 9d85aac3-229f-4456-b826-cfc6ba83a1f1
+
+	measure 'Daily Avg' = AVERAGEX(ALLSELECTED('real_pj_coffee_shop_db sales_db_copy'[transaction_date]),[Total sale])
+		lineageTag: 89f0a9c8-802f-43b7-8172-d6381c9cbb21
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Color for bar' = if([Total sale]>[Daily Avg],"above","below")
+		lineageTag: 21f2c7ea-f5fa-42ef-acd0-b162b54c471d
+
+	measure 'label for product category' = SELECTEDVALUE('real_pj_coffee_shop_db sales_db_copy'[product_category]) & " | " & [Total sale]
+		lineageTag: 0466354a-c5e2-4b0d-b6c8-83435d396a64
+
+	measure 'Product label' = ```
+			
+			VAR month_diff = [CM_sales] - [PM_sales]
+			VAR MoM =( [CM_sales] - [PM_sales] ) / [PM_sales]
+			VAR _sign = IF(month_diff > 0,"+","")
+			VAR _signtrend = IF(month_diff > 0,"▲","▼") 
+			RETURN
+			_signtrend & "" & _sign & format(MoM,"#0.0%") 
+			```
+		lineageTag: 277feadc-74e5-45fb-9205-8e8db17b0c11
+
+	measure 'label for product type' = SELECTEDVALUE('real_pj_coffee_shop_db sales_db_copy'[product_type]) & " | " & [Total sale]
+		lineageTag: 8f0ba16b-f027-400f-a317-fc57dfb51cb0
+
+	measure 'TT hour' = "Hour no" & ":" & " " & FORMAT(AVERAGE('real_pj_coffee_shop_db sales_db_copy'[Hour]),0)
+		lineageTag: 1f0799ae-57ce-4025-99f7-86ea9d892747
+
+	column Column
+		isHidden
+		formatString: 0
+		lineageTag: e919c3e3-27be-4b45-86f0-e7b71776b188
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Measure = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 2a3402e74f4146de8f5550800bfb2af0
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

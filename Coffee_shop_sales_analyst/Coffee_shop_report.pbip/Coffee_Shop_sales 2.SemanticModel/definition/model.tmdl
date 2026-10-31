@@ -1,0 +1,23 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["real_pj_coffee_shop_db sales_db_copy"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table 'real_pj_coffee_shop_db sales_db_copy'
+ref table DateTableTemplate_196e44e4-0f98-4969-8773-5dae00a96962
+ref table Date_table
+ref table LocalDateTable_84b5d5d3-6301-415c-957d-71d0b483c67b
+ref table Measure
+
+ref cultureInfo en-US
+

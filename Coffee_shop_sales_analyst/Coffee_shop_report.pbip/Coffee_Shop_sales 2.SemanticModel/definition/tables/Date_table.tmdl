@@ -1,0 +1,86 @@
+table Date_table
+	lineageTag: 172cc7d2-e31c-4001-909b-254555f8bc85
+
+	measure Measure
+		lineageTag: e1a16192-b4d4-4d4f-bfd3-32ba5342c17d
+
+		annotation 43dbc3e8-3a1c-4b6f-9923-b49ff7d6691c = True
+
+	column Date
+		formatString: Long Date
+		lineageTag: 7281ddd2-9422-48d7-8185-1fd2cb8394cc
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: b641f1d4-15f1-48b3-83f2-cfad97577ba2
+			defaultHierarchy: LocalDateTable_84b5d5d3-6301-415c-957d-71d0b483c67b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month = ```
+			FORMAT(Date_table[Date],"mmm") 
+			```
+		lineageTag: 4e73a793-c778-49d2-b43a-c04dde015f88
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month_number = month(Date_table[Date])
+		formatString: 0
+		lineageTag: 42761048-14ae-4748-8c5b-62325f613626
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Year' = FORMAT(Date_table[Date],"mmm yyyy" )
+		lineageTag: 05cdc286-e778-43a1-b2bf-e3d386960755
+		summarizeBy: none
+		sortByColumn: Month_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day = ```
+			FORMAT(Date_table[Date],"ddd") 
+			```
+		dataType: string
+		lineageTag: 9819c825-c9d7-4ed4-82bb-ae938fed9e5e
+		summarizeBy: none
+		sortByColumn: Weekday_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column Week = WEEKNUM(Date_table[Date],2 )
+		formatString: 0
+		lineageTag: 268879d8-6c99-41db-921e-b9c615670d08
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weekday_num = WEEKDAY(Date_table[Date],2)
+		formatString: 0
+		lineageTag: 2b14a24f-deab-4ea3-ac06-5f77d4c916fb
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Daynum = FORMAT(Date_table[Date],"d")
+		lineageTag: dfc4541a-bd9f-4dd6-93e2-72e2d0a37872
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weekday/weekend = IF( Date_table[Day] = "Sat" || Date_table[Day] = "Sun" ,"Weekend","Weekday")
+		lineageTag: d00f3c6e-20f0-4ada-883a-5a16cbc88407
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date_table = calculated
+		mode: import
+		source = CALENDAR(min('real_pj_coffee_shop_db sales_db_copy'[transaction_date]),MAX('real_pj_coffee_shop_db sales_db_copy'[transaction_date]) )
+
+	annotation PBI_Id = fbe187cea7144d59bf8e1b50931b844b
+

@@ -1,0 +1,9 @@
+relationship b641f1d4-15f1-48b3-83f2-cfad97577ba2
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Date_table.Date
+	toColumn: LocalDateTable_84b5d5d3-6301-415c-957d-71d0b483c67b.Date
+
+relationship ec8cc8a5-4bc3-c206-bddc-5b3cfc15a14b
+	fromColumn: 'real_pj_coffee_shop_db sales_db_copy'.transaction_date
+	toColumn: Date_table.Date
+
